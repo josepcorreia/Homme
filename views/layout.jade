@@ -1,0 +1,24 @@
+!!!
+html(ng-app="myApp")
+  head
+    meta(charset='utf8')
+    base(href='/')
+    title Home
+    link(rel='stylesheet', href='/components/bootstrap/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/app.css')
+  body
+    header
+        div.navbar
+            div.navbar-inner
+                a.brand(href="#") Home
+                ul.nav
+                    li
+                        a(ng-href="/devices") Devices
+                    li
+                        a(ng-href="/homeplan") Home Plan
+
+            
+    block body
+
+    footer
+        p © R/C 69

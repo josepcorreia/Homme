@@ -1,0 +1,11 @@
+{
+  "name": "application-name",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "socket.io": "",
+    "express": "",
+    "jade": "",
+    "mongoose": ""
+  }
+}

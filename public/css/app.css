@@ -1,0 +1,76 @@
+/* app css stylesheet */
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600);
+
+body {
+  /*margin: 0 auto;
+  width: 960px;*/
+  font-family: 'Open Sans', 'Helvetica', sans-serif;
+}
+
+header {
+  background-color: #fff;
+  padding: 1em;
+  text-align: center;
+}
+
+header > h1 {
+  font-size: 2em;
+  font-weight: 300;
+}
+
+header > h2 {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+footer {
+  font-size: 0.7em;
+  text-align: center;
+}
+
+#map {
+  background: url('/img/lisbon.png') no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 600px;
+}
+
+#legend {
+  margin-top: 1em;
+}
+
+#legend > ul {
+  list-style: none;
+}
+
+#legend > ul > li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#legend > ul > li[class^="circle-"]:before {
+  display: inline-block;
+  content: "";
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 50px;}
+
+#legend > ul > li[class="circle-green"]:before {
+  background-color: #46a546;
+}
+
+#legend > ul > li[class="circle-yellow"]:before {
+  background-color: #ffc40d;
+}
+
+#legend > ul > li[class="circle-red"]:before {
+  background-color: #9d261d;
+}
+
+#device {
+
+}
