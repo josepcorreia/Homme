@@ -26,8 +26,10 @@ controller('DeviceController', function ($scope, $http, socket) {
         $scope.devices = data.devices;
       })
       .error(function(data, status, headers, config) {
-        
       });
+
+  $scope.selection = "newdevice";
+
 });
 controller('HomePlanController', function ($scope, $http) {
 });
