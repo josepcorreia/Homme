@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var deviceSchema = new mongoose.Schema({
-  id: {type: Number, unique: true },
+  id: {type: String, unique: true },
   type: String, //heater, tv, ...
   status: Boolean, //ON-true or OFF-false
   room: String ,// sugestao: ter outro schema room
@@ -16,10 +16,15 @@ var deviceSchema = new mongoose.Schema({
 var Device = mongoose.model( 'Device', deviceSchema );
 
 //exemplo
-Device.create({ id: 'Batanete', type: 'Tv',status: true, room: 'Manu\'s room', temperature: 0 }, function (err, trash) {
+Device.create({ id: 'Batanete', type: 'Tv',status: true, room: 'Manu room', temperature: 0 }, function (err, trash) {
   if (err) console.error('trash duplicated');
 });
-
+Device.create({ id: 'Batanete2', type: 'Vibrador',status: true, room: 'Manu\'s room', temperature: 0 }, function (err, trash) {
+  if (err) console.error('trash duplicated');
+});
+Device.create({ id: 'Batanete4', type: 'Vibrador',status: true, room: 'Manu\'s room', temperature: 0 }, function (err, trash) {
+  if (err) console.error('trash duplicated');
+});
 if(process.env.VCAP_SERVICES){
     var env = JSON.parse(process.env.VCAP_SERVICES);
     var mongo = env['mongodb-1.8'][0]['credentials'];

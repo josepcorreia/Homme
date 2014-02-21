@@ -3,19 +3,22 @@ html(ng-app="myApp")
   head
     meta(charset='utf8')
     base(href='/')
-    title Home
+    title Homme
     link(rel='stylesheet', href='/components/bootstrap/css/bootstrap.css')
+    link(rel='stylesheet', href='/components/bootstrap/css/bootstrap-theme.css')
     link(rel='stylesheet', href='/css/app.css')
   body
     header
-        div.navbar
-            div.navbar-inner
-                a.brand(href="#") Home
-                ul.nav
-                    li
-                        a(ng-href="/devices") Devices
-                    li
-                        a(ng-href="/homeplan") Home Plan
+        nav.navbar.navbar-default(role='navigation')
+            div.container-fluid
+                div.navbar-header
+                    a.navbar-brand(ng-href="#") Homme 
+                div.collapse.navbar-collapse   
+                    ul.nav.navbar-nav
+                        li
+                            a(ng-href="/devices") Devices
+                        li
+                            a(ng-href="/homeplan") Home Plan
 
             
     block body

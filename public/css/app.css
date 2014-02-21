@@ -70,7 +70,23 @@ footer {
 #legend > ul > li[class="circle-red"]:before {
   background-color: #9d261d;
 }
-
-#device {
-
+#container{
+  width: 1024px;
 }
+#container > .nav_devices{
+  top: auto;
+  z-index: 1;
+  float: left;
+  width: 20%;
+}
+.nav_newdevice{
+ margin-left: 18px;
+}
+#container > .dev{
+  top: auto;
+  z-index: 2;
+  float:right;
+  width: 75%;
+}
+.newdevice{}
+.device{}

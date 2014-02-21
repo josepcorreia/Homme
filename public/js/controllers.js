@@ -21,7 +21,13 @@ angular.module('myApp.controllers', []).
   
 //controllers
 controller('DeviceController', function ($scope, $http, socket) {
-  $('.dropdown-toggle').dropdown();
+  $http({method: 'GET', url: '/api/devices'})
+      .success(function(data, status, headers, config) {
+        $scope.devices = data.devices;
+      })
+      .error(function(data, status, headers, config) {
+        
+      });
 });
 controller('HomePlanController', function ($scope, $http) {
 });
