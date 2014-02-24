@@ -28,10 +28,43 @@ controller('DeviceController', function ($scope, $http, socket) {
       .error(function(data, status, headers, config) {
       });
 
-  $scope.selection = "newdevice";
+    $scope.devTitle="Device";
+    
+    //Form
+    //status
+    $scope.statusOptions= [{status:'OFF'},{status:'ON'}];  
+    
+    //rooms
+    $scope.roomOptions= [{room:'Manu\'s room'},{room:'Zé\'s room'},{room:'Rafael\'s room'},{room:'Seixas\'s room'},{room:'Kitchen'}];  
+    
+
+    //vai desaparecer
+    $scope.selectnewdev = function() {
+      $scope.selection="newdevice";
+      $scope.devTitle="Create new device";
+    }
+    //quando se clica num dispositivo
+    $scope.selectdev = function(device) {
+      $scope.devTitle=device.type;
+      $scope.selection="device";
+      $scope.deviceID=device.id;
+      
+      $scope.roomSelected=$scope.roomOptions[device.room];
+      
+      $scope.statusSelected=$scope.statusOptions[0];
+      if(device.status)
+        $scope.statusSelected=$scope.statusOptions[1];
+      
+    }
+
+    $scope.updateStatus= function() {
+      //bloquear o select
+      //enviar mensagem ao dispositivo
+    }
 
 });
-controller('HomePlanController', function ($scope, $http) {
+
+controller('HomePlanController', function ($scope, $http, socket) {
 });
 /*
 controller('MapController', function ($scope, $http, socket) {
