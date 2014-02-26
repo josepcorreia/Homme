@@ -26,19 +26,19 @@ div#container
 									input.form-control(type='text')(ng-model="deviceID")(ng-disabled="true")	
 								div.form-group
 									label Select type of device
-									select#typedev.form-control(ng-model="typemodel",ng-change="updateType()")
+									select.typedev.form-control(ng-model="typemodel",ng-change="updateType()")
 										option(value="Tv") TV
 										option(value='Heater') Heater
 										option(value='Illumination') Illumination
 										option(value='Other') Other
 								div.form-group
 									label Select status of device
-									select#status.form-control(ng-model="statusmodel", ng-change="updateStatus()")
+									select.status.form-control(ng-model="statusmodel", ng-change="updateStatus()")
 										option(value='on') ON
 										option(value='off') OFF
 								div.form-group
 									label Location of device
-									select#local.form-control(ng-model="localmodel", ng-change="updateLocal()")
+									select.local.form-control(ng-model="localmodel", ng-change="updateLocal()")
 										option(value='kitchen') Kitchen
 										option(value='manuroom') Manu's Room
 										option(value='rafaelroom') Rafael's Room

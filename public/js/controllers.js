@@ -46,30 +46,29 @@ controller('DeviceController', function ($scope, $http, socket) {
     //type
     var type=device.type;
     $scope.typemodel=type;
-    $("#typedev option[value="+type+"]").attr("selected",true);
+    $(".typedev option[value="+type+"]").attr("selected",true);
     //status
     var stat= device.status;
     $scope.statusmodel= stat;
-    $("#status option[value="+stat+"]").attr("selected",true);
+    $(".status option[value="+stat+"]").attr("selected",true);
     //local
     var loc =device.room;
     $scope.localmodel= loc;
-    $("#local option[value="+loc+"]").attr("selected",true);
+    $(".local option[value="+loc+"]").attr("selected",true);
 
   }
     
 
      $scope.updateType= function() {
-        console.log($("#typedev"));
-       //$scope.devTitle=angular.element(document.getElementById('typedev')).val();
+       
+       console.log($("select.typedev").val());
       
      }
     $scope.updateStatus= function() {
-      
-      //$scope.devTitle=angular.element(document.getElementById('status')).val();
-      
+      console.log($("select.status").val());      
     }
     $scope.updateLocal= function() {
+      console.log($("select.local").val());
     }
 
 });
