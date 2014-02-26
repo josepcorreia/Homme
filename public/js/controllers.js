@@ -19,47 +19,57 @@ angular.module('myApp.controllers', []).
     }
   }).
   
+
+
 //controllers
 controller('DeviceController', function ($scope, $http, socket) {
   $http({method: 'GET', url: '/api/devices'})
       .success(function(data, status, headers, config) {
         $scope.devices = data.devices;
+        
       })
       .error(function(data, status, headers, config) {
-      });
+  });
 
-    $scope.devTitle="Device";
-    
-    //Form
+  $scope.devTitle="Device";
+  $scope.selection="withoutdev";
+
+  //quando se clica num dispositivo
+  $scope.selectdev = function(device) { 
+    $scope.selection="device";
+    //title
+    $scope.devTitle=device.type;
+    //id
+    $scope.deviceID=device.id;
+
+    //FORM
+    //type
+    var type=device.type;
+    $scope.typemodel=type;
+    $("#typedev option[value="+type+"]").attr("selected",true);
     //status
-    $scope.statusOptions= [{status:'OFF'},{status:'ON'}];  
-    
-    //rooms
-    $scope.roomOptions= [{room:'Manu\'s room'},{room:'Zé\'s room'},{room:'Rafael\'s room'},{room:'Seixas\'s room'},{room:'Kitchen'}];  
+    var stat= device.status;
+    $scope.statusmodel= stat;
+    $("#status option[value="+stat+"]").attr("selected",true);
+    //local
+    var loc =device.room;
+    $scope.localmodel= loc;
+    $("#local option[value="+loc+"]").attr("selected",true);
+
+  }
     
 
-    //vai desaparecer
-    $scope.selectnewdev = function() {
-      $scope.selection="newdevice";
-      $scope.devTitle="Create new device";
-    }
-    //quando se clica num dispositivo
-    $scope.selectdev = function(device) {
-      $scope.devTitle=device.type;
-      $scope.selection="device";
-      $scope.deviceID=device.id;
+     $scope.updateType= function() {
+        console.log($("#typedev"));
+       //$scope.devTitle=angular.element(document.getElementById('typedev')).val();
       
-      $scope.roomSelected=$scope.roomOptions[device.room];
-      
-      $scope.statusSelected=$scope.statusOptions[0];
-      if(device.status)
-        $scope.statusSelected=$scope.statusOptions[1];
-      
-    }
-
+     }
     $scope.updateStatus= function() {
-      //bloquear o select
-      //enviar mensagem ao dispositivo
+      
+      //$scope.devTitle=angular.element(document.getElementById('status')).val();
+      
+    }
+    $scope.updateLocal= function() {
     }
 
 });

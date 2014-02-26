@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 var deviceSchema = new mongoose.Schema({
   id: {type: Number, unique: true },
   type: String, 
-  status: Boolean, //ON-true or OFF-false
-  room: Number ,//[{room:'Manus bedroom'},{room:'Zés bedroom'},{room:'Rafaels bedroom'},{room:'Seixass bedroom'},{room:'Kitchen'}];  
+  status: String, //ON-1 or OFF-0
+  room: String ,
   /*position: { //posição na room
     x: Number,
     y: Number,
@@ -16,13 +16,13 @@ var deviceSchema = new mongoose.Schema({
 var Device = mongoose.model( 'Device', deviceSchema );
 
 //exemplo
-Device.create({ id: 1, type: 'Tv',status: true, room: 1, temperature: 0 }, function (err, trash) {
+Device.create({ id: 1, type: 'Tv',status: 'on', room: 'kitchen', temperature: 0 }, function (err, trash) {
   if (err) console.error('trash duplicated');
 });
-Device.create({ id: 2, type: 'Vibrador',status: false, room: 0, temperature: 0 }, function (err, trash) {
+Device.create({ id: 2, type: 'Heater',status: 'off', room: 'seixasroom', temperature: 0 }, function (err, trash) {
   if (err) console.error('trash duplicated');
 });
-Device.create({ id: 3, type: 'Vibrador',status: false, room: 2, temperature: 0 }, function (err, trash) {
+Device.create({ id: 3, type: 'Illumination',status: 'off', room: 'manuroom', temperature: 0 }, function (err, trash) {
   if (err) console.error('trash duplicated');
 });
 if(process.env.VCAP_SERVICES){

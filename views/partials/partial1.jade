@@ -8,53 +8,40 @@ div#container
 					ul.nav.nav-pills.nav-stacked
 						li 
 							a(ng-href="")(ng-repeat="device in devices")(ng-click="selectdev(device)") {{ device.type}}
-			
-				div.nav_newdevice
-					button.btn.btn-primary.btn-lg(type='button')(ng-click="selectnewdev()")  New Device
+
 	div.dev
 		div.panel.panel-default
 				div.panel-heading
 					h3.panel-title(ng-model="devTitle")  {{devTitle}}
 				div.panel-body
 					div.panel-body(ng-switch on="selection")
-						div.device(ng-switch-when="device") 
-							form(role='form')(name="deviceform")
+						div.device(ng-switch-when="withoutdev") 
+							h3 Qualquer coisa
+						div.device(ng-switch-when="device")
+							form.deviceform(role='form')
+								div.device(ng-switch-when="withoutdev")
+									h3 dizer qualquer cosia
 								div.form-group(name="inputID")
 									label(for='exampleInputText') ID of device
 									input.form-control(type='text')(ng-model="deviceID")(ng-disabled="true")	
 								div.form-group
 									label Select type of device
-									select.form-control
-										option TV
-										option Heater
-										option Illumination
-										option Other
+									select#typedev.form-control(ng-model="typemodel",ng-change="updateType()")
+										option(value="Tv") TV
+										option(value='Heater') Heater
+										option(value='Illumination') Illumination
+										option(value='Other') Other
 								div.form-group
 									label Select status of device
-									select.form-control(ng-model="statusSelected")(ng-options="s.status for s in statusOptions")(ng-change="updateStatus()")
-										option ON
-										option OFF
-								div.form-group	
+									select#status.form-control(ng-model="statusmodel", ng-change="updateStatus()")
+										option(value='on') ON
+										option(value='off') OFF
+								div.form-group
 									label Location of device
-									select.form-control(ng-model="roomSelected")(ng-options="r.room for r in roomOptions")
+									select#local.form-control(ng-model="localmodel", ng-change="updateLocal()")
+										option(value='kitchen') Kitchen
+										option(value='manuroom') Manu's Room
+										option(value='rafaelroom') Rafael's Room
+										option(value='seixasroom') Seixas' Room
+										option(value='zeroom') Zé's Room
 								button.btn.btn-default(type='submit') Edit
-
-						div.newdevice(ng-switch-when="newdevice") 
-							form(role='form')
-								div.form-group
-									label Select type of device
-									select.form-control
-										option TV
-										option Heater
-										option Illumination
-										option Other
-								div.form-group
-									label Select status of device
-									select.form-control
-										option ON
-										option OFF
-
-								div.form-group	
-									label(for='exampleInputText') Location of device
-									input.form-control(type='text')(placeholder="Location of device, e.g Manu's Bedroom ")
-								button.btn.btn-default(type='submit')(ng-click="selectnewdev()") Create
