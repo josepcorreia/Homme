@@ -65,11 +65,19 @@ controller('DeviceController', function ($scope, $http, socket) {
       
      }
     $scope.updateStatus= function() {
-      console.log($("select.status").val());      
+      var stat = $("select.status").val();
+      console.log(stat);
+      socket.emit('update:status', stat);      
     }
     $scope.updateLocal= function() {
       console.log($("select.local").val());
     }
+
+    //communication
+    socket.on('update:status', function (data) {
+      
+    });
+
 
 });
 

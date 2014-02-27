@@ -13,9 +13,9 @@ var app = module.exports = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
-//io.configure('development', function(){
-  //io.set('transports', ['xhr-polling']);
-//});
+io.configure('development', function(){
+  io.set('transports', ['xhr-polling']);
+});
 /**
  * Configuration
  */
@@ -56,12 +56,17 @@ app.get('/api/devices', api.devices);
 app.get('*', routes.index);
 
 // Socket.io Communication
-//io.sockets.on('connection', require('./routes/socket'));
+io.sockets.on('connection', require('./routes/socket'));
 var socketIO;
 io.sockets.on('connection', function (socket) {
   socketIO=socket;
   socket.on('message', function (data) {
-    //console.log(data);
+    console.log(data);
+  });
+  //
+  socket.on('update:status', function (data) {
+    //enviar a data para o coiso, como fazer, nao sei
+    console.log(data + ' aqui');
   });
 })
 
@@ -78,21 +83,31 @@ server.listen(app.get('port'), function () {
 */
 var net = require('net');
 var PORT = 8888;
-/*
+
+
+
 var TCPserver = net.createServer(function(sock) { //'connection' listener
   console.log('server connected');
 
   sock.on('data', function(data) {
-    //console.log('Recebido' + data);
-      splitData(String(data));
+    console.log('Recebido' + data);
+    //  splitData(String(data));
   });
-*/
-/*  
+   sock.write("O");
+  io.sockets.on('connection', function (socket) {
+    socketIO=socket;
+    socket.on('update:status', function (data) {
+    //enviar a data para o coiso, como fazer, nao sei
+    console.log(data + ' aquli');
+    sock.write(data);
+  });
+})
+
+ 
+
   sock.on('end', function() {
     console.log('server disconnected');
   });
-  //c.write('hello\r\n');
-  //c.pipe(c);
 });
 
 TCPserver.listen(PORT, function() { //'listening' listener
@@ -101,6 +116,19 @@ TCPserver.listen(PORT, function() { //'listening' listener
 
  var mongoose = require('mongoose');
  //var Trash = mongoose.model( 'Trash' );
+
+var chupamos = function(){
+ 
+  io.sockets.on('connection', function (socket) {
+    socketIO=socket;
+    socket.on('update:status', function (data) {
+      console.log(data + ' aquli');
+    });
+  })
+  
+//return data; 
+}
+
 
 /*var send;
 var splitData  = function(data){

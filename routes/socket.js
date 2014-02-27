@@ -3,20 +3,20 @@
  */
 
  var mongoose = require('mongoose');
- //var Trash = mongoose.model( 'Trash' );
+ var Device = mongoose.model( 'Device' );
 
 module.exports = function (socket) {
-/*
+
 	socket.on('message', function (data) {
 		socket.emit('response', data);
 		socket.broadcast.emit('response', data);
 	});
 
-	socket.on('change:color', function (data) {
-		socket.emit('change:color', data);
-		socket.broadcast.emit('change:color', data);
+	socket.on('update:status', function (data) {
+		socket.emit('update:status', data);
+		socket.broadcast.emit('update:status', data);
 	});
-
+/*
 	socket.on('register:trash', function (trash) {
 		Trash.create(trash, function (err, trash) {
   			if (err) console.error('trash duplicated');
