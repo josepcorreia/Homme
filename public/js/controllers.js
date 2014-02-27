@@ -33,7 +33,7 @@ controller('DeviceController', function ($scope, $http, socket) {
 
   $scope.devTitle="Device";
   $scope.selection="withoutdev";
-
+  $scope.deviceID=0;
   //quando se clica num dispositivo
   $scope.selectdev = function(device) { 
     $scope.selection="device";
@@ -66,8 +66,9 @@ controller('DeviceController', function ($scope, $http, socket) {
      }
     $scope.updateStatus= function() {
       var stat = $("select.status").val();
+      var msg = {id:$scope.deviceID, status:stat};
       console.log(stat);
-      socket.emit('update:status', stat);      
+      socket.emit('update:status', msg);      
     }
     $scope.updateLocal= function() {
       console.log($("select.local").val());
@@ -79,7 +80,7 @@ controller('DeviceController', function ($scope, $http, socket) {
     });
 
 
-});
+}).
 
 controller('HomePlanController', function ($scope, $http, socket) {
 });

@@ -63,11 +63,11 @@ io.sockets.on('connection', function (socket) {
   socket.on('message', function (data) {
     console.log(data);
   });
-  //
+  /*
   socket.on('update:status', function (data) {
     //enviar a data para o coiso, como fazer, nao sei
     console.log(data + ' aqui');
-  });
+  });*/
 })
 
 /**
@@ -83,23 +83,27 @@ server.listen(app.get('port'), function () {
 */
 var net = require('net');
 var PORT = 8888;
-
-
+var listsockets = [];
 
 var TCPserver = net.createServer(function(sock) { //'connection' listener
   console.log('server connected');
-
+  var deviceId = 0;
   sock.on('data', function(data) {
     console.log('Recebido' + data);
-    //  splitData(String(data));
+    var received = splitData(String(data));
+    deviceId = parseInt(received.id);
+    console.log(deviceId);
+    listsockets[deviceId]=sock;
   });
-   sock.write("O");
   io.sockets.on('connection', function (socket) {
     socketIO=socket;
     socket.on('update:status', function (data) {
-    //enviar a data para o coiso, como fazer, nao sei
-    console.log(data + ' aquli');
-    sock.write(data);
+      var id = parseInt(data.id);
+      console.log(id);
+      if(id==deviceId){
+        listsockets[id].write(data.status);
+        console.log(data.status + ' aquli');
+      }
   });
 })
 
@@ -115,29 +119,19 @@ TCPserver.listen(PORT, function() { //'listening' listener
 });
 
  var mongoose = require('mongoose');
- //var Trash = mongoose.model( 'Trash' );
-
-var chupamos = function(){
- 
-  io.sockets.on('connection', function (socket) {
-    socketIO=socket;
-    socket.on('update:status', function (data) {
-      console.log(data + ' aquli');
-    });
-  })
-  
-//return data; 
-}
+ //var Device = mongoose.model( 'Device' );
 
 
-/*var send;
+
+
 var splitData  = function(data){
   var dataSplit = data.split('|');
-  send = {name:dataSplit[0], level:Number(dataSplit[1]) }
-  console.log(send);
+  var received = {id:dataSplit[0], mgs:dataSplit[1]};
+  return received;
+};
+
+/*
     socketIO.emit('update:trash', send); 
     socketIO.broadcast.emit('update:trash', send); 
 Trash.update({ name: dataSplit[0] }, { $set: { level: dataSplit[1] } }).exec();
-};
 */
-
