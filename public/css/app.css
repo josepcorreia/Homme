@@ -71,22 +71,27 @@ footer {
   background-color: #9d261d;
 }
 #container{
-  width: 1024px;
+  width: 80%;
+  margin:0 auto;
 }
 #container > .nav_devices{
   top: auto;
-  z-index: 1;
   float: left;
-  width: 20%;
-}
-.nav_newdevice{
- margin-left: 18px;
+  width: 25%;
 }
 #container > .dev{
   top: auto;
-  z-index: 2;
   float:right;
-  width: 75%;
+  width: 70%;
 }
+.info > .left{
+  float: left;
+  width: 50%;
+}
+.info > .right{
+  float: right;
+  width: 50%;
+}
+
 
 .device{}

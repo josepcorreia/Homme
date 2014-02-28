@@ -63,11 +63,9 @@ io.sockets.on('connection', function (socket) {
   socket.on('message', function (data) {
     console.log(data);
   });
-  /*
-  socket.on('update:status', function (data) {
-    //enviar a data para o coiso, como fazer, nao sei
-    console.log(data + ' aqui');
-  });*/
+  socket.on('update:name', function (data) {
+    updateDevType(data);
+  });
 })
 
 /**
@@ -97,7 +95,7 @@ var TCPserver = net.createServer(function(sock) { //'connection' listener
   });
   io.sockets.on('connection', function (socket) {
     socketIO=socket;
-    socket.on('update:status', function (data) {
+    socket.on('send:status', function (data) {
       var id = parseInt(data.id);
       console.log(id);
       if(id==deviceId){
@@ -114,12 +112,18 @@ var TCPserver = net.createServer(function(sock) { //'connection' listener
   });
 });
 
+
 TCPserver.listen(PORT, function() { //'listening' listener
   console.log('server bound');
 });
+//end tcp communication
 
  var mongoose = require('mongoose');
- //var Device = mongoose.model( 'Device' );
+ var Device = mongoose.model( 'Device' );
+
+ var updateDevType = function(dev){
+    Device.update({ id: dev.id }, { $set: { name: dev.name } }).exec();
+ }
 
 
 

@@ -23,10 +23,11 @@ angular.module('myApp.controllers', []).
 
 //controllers
 controller('DeviceController', function ($scope, $http, socket) {
+  $scope.devs = {}; 
+
   $http({method: 'GET', url: '/api/devices'})
       .success(function(data, status, headers, config) {
         $scope.devices = data.devices;
-        
       })
       .error(function(data, status, headers, config) {
   });
@@ -37,16 +38,16 @@ controller('DeviceController', function ($scope, $http, socket) {
   //quando se clica num dispositivo
   $scope.selectdev = function(device) { 
     $scope.selection="device";
-    //title
-    $scope.devTitle=device.type;
-    //id
     $scope.deviceID=device.id;
+    //title //id
+    $scope.devTitle=$scope.deviceID + ': ' +device.name;
+    
+    $scope.temperature=device.temperature + ' °C';
 
     //FORM
-    //type
-    var type=device.type;
-    $scope.typemodel=type;
-    $(".typedev option[value="+type+"]").attr("selected",true);
+    //name
+    var name=device.name;
+    $scope.namemodel=name;
     //status
     var stat= device.status;
     $scope.statusmodel= stat;
@@ -59,16 +60,16 @@ controller('DeviceController', function ($scope, $http, socket) {
   }
     
 
-     $scope.updateType= function() {
-       
-       console.log($("select.typedev").val());
-      
+    $scope.updatename= function() {
+      var upname= {id:$scope.deviceID,name:$scope.namemodel};
+      socket.emit('update:name', upname);
      }
+
     $scope.updateStatus= function() {
       var stat = $("select.status").val();
       var msg = {id:$scope.deviceID, status:stat};
       console.log(stat);
-      socket.emit('update:status', msg);      
+      socket.emit('send:status', msg);      
     }
     $scope.updateLocal= function() {
       console.log($("select.local").val());

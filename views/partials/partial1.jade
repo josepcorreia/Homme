@@ -7,7 +7,7 @@ div#container
 				div.panel-body
 					ul.nav.nav-pills.nav-stacked
 						li 
-							a(ng-href="")(ng-repeat="device in devices")(ng-click="selectdev(device)") {{ device.type}}
+							a(ng-href="")(ng-repeat="device in devices")(ng-click="selectdev(device)") {{device.name}}
 
 	div.dev
 		div.panel.panel-default
@@ -20,22 +20,39 @@ div#container
 						div.device(ng-switch-when="device")
 							form.deviceform(role='form')
 								div.device(ng-switch-when="withoutdev")
-									h3 dizer qualquer cosia
-								div.form-group(name="inputID")
-									label(for='exampleInputText') ID of device
-									input.form-control(type='text')(ng-model="deviceID")(ng-disabled="true")	
-								div.form-group
-									label Select type of device
-									select.typedev.form-control(ng-model="typemodel",ng-change="updateType()")
-										option(value="Tv") TV
-										option(value='Heater') Heater
-										option(value='Illumination') Illumination
-										option(value='Other') Other
-								div.form-group
-									label Select status of device
-									select.status.form-control(ng-model="statusmodel", ng-change="updateStatus()")
-										option(value='on') ON
-										option(value='off') OFF
+												h3 dizer qualquer cosia	
+								div.info
+									div.form-group.left
+										label Select type of device
+										input.form-control(type='text',ng-model="namemodel")
+									div.form-group.right
+										label Select status of device
+										select.status.form-control(ng-model="statusmodel", ng-change="updateStatus()")
+													option(value='on') ON
+													option(value='off') OFF
+								div.info
+									div.form-group.left
+										label Analog Sensor Type
+										select.form-control(ng-model="sensormodel", ng-change="updatesensor()")
+											option(value='brightness') Brightness
+											option(value='proximity') Proximity
+											option(value='temperature') Temperature
+									div.form-group.right
+										label Datasfsidfhds
+										input.form-control(type='text',ng-model="xxxmodel")
+
+								div.info
+									div.form-group.left
+										label Digital Sensor Status
+										select.form-control(ng-model="senddddsormodel", ng-change="updatesensor()")
+											option(value='irreceiver') IR Receiver
+											option(value='irtransmitter') IR Trasmitter
+									div.form-group.right
+										label Digital Port
+										select.form-control(ng-model="digitalmodel", ng-change="upDigSensor()")
+											option(value='enable') Enable
+											option(value='disable') Disabled
+									
 								div.form-group
 									label Location of device
 									select.local.form-control(ng-model="localmodel", ng-change="updateLocal()")
@@ -44,4 +61,4 @@ div#container
 										option(value='rafaelroom') Rafael's Room
 										option(value='seixasroom') Seixas' Room
 										option(value='zeroom') Zé's Room
-								button.btn.btn-default(type='submit') Edit
+								//button.btn.btn-default(type='submit') Edit

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var deviceSchema = new mongoose.Schema({
   id: {type: Number, unique: true },
-  type: String, 
+  name: String, 
   status: String, //ON-1 or OFF-0
   room: String ,
   /*position: { //posição na room
@@ -16,13 +16,13 @@ var deviceSchema = new mongoose.Schema({
 var Device = mongoose.model( 'Device', deviceSchema );
 
 //exemplo
-Device.create({ id: 1, type: 'Tv',status: 'on', room: 'kitchen', temperature: 0 }, function (err, trash) {
+Device.create({ id: 1, name: 'Tv',status: 'on', room: 'kitchen'}, function (err, trash) {
   if (err) console.error('trash duplicated');
 });
-Device.create({ id: 2, type: 'Heater',status: 'off', room: 'seixasroom', temperature: 0 }, function (err, trash) {
+Device.create({ id: 2, name: 'Heater',status: 'off', room: 'seixasroom'}, function (err, trash) {
   if (err) console.error('trash duplicated');
 });
-Device.create({ id: 3, type: 'Illumination',status: 'off', room: 'manuroom', temperature: 0 }, function (err, trash) {
+Device.create({ id: 3, name: 'Lights',status: 'off', room: 'manuroom'}, function (err, trash) {
   if (err) console.error('trash duplicated');
 });
 if(process.env.VCAP_SERVICES){

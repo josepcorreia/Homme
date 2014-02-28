@@ -12,7 +12,7 @@ exports.name = function (req, res) {
 };
 
 exports.devices = function (req, res) {
-	Devices.find({}, function (err, result) {
+	Devices.find({ $query: {}, $orderby: { id : 1 } }, function (err, result) {
 		if (!err) {
 			res.json({
 				devices: result
