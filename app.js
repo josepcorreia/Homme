@@ -64,7 +64,19 @@ io.sockets.on('connection', function (socket) {
     console.log(data);
   });
   socket.on('update:name', function (data) {
-    updateDevType(data);
+    updateDevName(data);
+  });
+  socket.on('update:analog', function (data) {
+    updateAnalog(data);
+  });
+  socket.on('update:digital', function (data) {
+    updateDigitalType(data);
+  });
+  socket.on('update:digitalport', function (data) {
+    updateDigitalPort(data);
+  });
+  socket.on('update:room', function (data) {
+    updateLocal(data);
   });
 })
 
@@ -121,10 +133,25 @@ TCPserver.listen(PORT, function() { //'listening' listener
  var mongoose = require('mongoose');
  var Device = mongoose.model( 'Device' );
 
- var updateDevType = function(dev){
+ var updateDevName = function(dev){
     Device.update({ id: dev.id }, { $set: { name: dev.name } }).exec();
  }
 
+var updateAnalog = function(dev){
+    Device.update({ id: dev.id }, { $set: { analog: dev.analog } }).exec();
+}
+
+var updateDigitalType = function(dev){
+    Device.update({ id: dev.id }, { $set: { digital: dev.digital } }).exec();
+}
+
+var updateDigitalPort = function(dev){
+    Device.update({ id: dev.id }, { $set: { digitalport: dev.digitalport } }).exec();
+}
+
+var updateLocal = function(dev){
+    Device.update({ id: dev.id }, { $set: { room: dev.room } }).exec();
+}
 
 
 

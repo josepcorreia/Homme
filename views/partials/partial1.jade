@@ -1,13 +1,13 @@
-div#container
-	div.nav_devices
+div.container.theme-showcase(role="main")
+	div.nav-devices
 		div.panel.panel-default
 			div.panel-heading
 				h3.panel-title Choose a Device 
 			div.panel-body
 				div.panel-body
 					ul.nav.nav-pills.nav-stacked
-						li 
-							a(ng-href="")(ng-repeat="device in devices")(ng-click="selectdev(device)") {{device.name}}
+						li(ng-repeat="device in devices",ng-class="{true:'active', false:''}[device.id==devID]", ng-click="selectdev(device.id)")  
+							a(ng-href="",ng-class="{true:deviceID, false:''}[device.id==devID]") {{device.name}}
 
 	div.dev
 		div.panel.panel-default
@@ -19,37 +19,40 @@ div#container
 							h3 Qualquer coisa
 						div.device(ng-switch-when="device")
 							form.deviceform(role='form')
-								div.device(ng-switch-when="withoutdev")
-												h3 dizer qualquer cosia	
 								div.info
 									div.form-group.left
-										label Select type of device
-										input.form-control(type='text',ng-model="namemodel")
+										label Name of device
+										div.input-group
+											input.form-control.devname(type='text',ng-model="devname")
+											span.input-group-btn
+												button.btn.btn-default(type="button",ng-click="updateName()") Submit
 									div.form-group.right
 										label Select status of device
-										select.status.form-control(ng-model="statusmodel", ng-change="updateStatus()")
+										select.status.form-control(ng-model="status", ng-change="updateStatus()")
 													option(value='on') ON
 													option(value='off') OFF
 								div.info
 									div.form-group.left
 										label Analog Sensor Type
-										select.form-control(ng-model="sensormodel", ng-change="updatesensor()")
-											option(value='brightness') Brightness
-											option(value='proximity') Proximity
-											option(value='temperature') Temperature
+										select.analog.form-control(ng-model="analog",ng-disabled="analogTest", ng-change="updateAnalog()")
+											option(value='None') None
+											option(value='Brightness') Brightness
+											option(value='Proximity') Proximity
+											option(value='Temperature') Temperature
 									div.form-group.right
-										label Datasfsidfhds
-										input.form-control(type='text',ng-model="xxxmodel")
+										label {{analog}}
+										input.form-control(type='text',ng-model="analogdata", disabled="disabled")
 
 								div.info
 									div.form-group.left
-										label Digital Sensor Status
-										select.form-control(ng-model="senddddsormodel", ng-change="updatesensor()")
+										label Digital Type
+										select.digital.form-control(ng-model="digital", ng-change="updateDigital()")
+											option(value='None') None
 											option(value='irreceiver') IR Receiver
 											option(value='irtransmitter') IR Trasmitter
 									div.form-group.right
 										label Digital Port
-										select.form-control(ng-model="digitalmodel", ng-change="upDigSensor()")
+										select.digitalport.form-control(ng-model="digitalport", ng-change="upDigitalPort()")
 											option(value='enable') Enable
 											option(value='disable') Disabled
 									

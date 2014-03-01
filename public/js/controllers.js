@@ -23,68 +23,126 @@ angular.module('myApp.controllers', []).
 
 //controllers
 controller('DeviceController', function ($scope, $http, socket) {
-  $scope.devs = {}; 
+  $scope.devs = []; 
 
   $http({method: 'GET', url: '/api/devices'})
       .success(function(data, status, headers, config) {
         $scope.devices = data.devices;
+        $scope.devices.forEach(function (device) {
+           $scope.devs[device.id]=device; 
+        });
       })
       .error(function(data, status, headers, config) {
   });
 
   $scope.devTitle="Device";
   $scope.selection="withoutdev";
-  $scope.deviceID=0;
+  $scope.stringID="";
+  $scope.devID;
+
   //quando se clica num dispositivo
-  $scope.selectdev = function(device) { 
-    $scope.selection="device";
-    $scope.deviceID=device.id;
-    //title //id
-    $scope.devTitle=$scope.deviceID + ': ' +device.name;
-    
-    $scope.temperature=device.temperature + ' °C';
+  $scope.selectdev = function(id) { 
+      $scope.selection="device";
+      $scope.stringID=String(id);
+      $scope.devID=id;
 
-    //FORM
-    //name
-    var name=device.name;
-    $scope.namemodel=name;
-    //status
-    var stat= device.status;
-    $scope.statusmodel= stat;
-    $(".status option[value="+stat+"]").attr("selected",true);
-    //local
-    var loc =device.room;
-    $scope.localmodel= loc;
-    $(".local option[value="+loc+"]").attr("selected",true);
+      //title //id
+      $scope.devTitle=$scope.devID + ': ' +$scope.devs[id].name;
 
+      //FORM - name
+      $scope.devname=$scope.devs[id].name;
+      
+      //status
+      var stat= $scope.devs[id].status;
+      $scope.status= stat;
+      $(".status option[value="+stat+"]").attr("selected",true);
+      
+      //Analog
+      if($scope.devs[id].analog=='x'){
+        var anl ="None";
+        $scope.analog=anl;
+        $(".analog option[value="+anl+"]").attr("selected",true);
+        $scope.analogTest=true;
+      }else{
+        var anl = $scope.devs[id].analog;
+        $scope.analog=anl;
+        $(".analog option[value="+anl+"]").attr("selected",true);
+        $scope.analogTest=false;
+        //$(".analog option[value='None']").remove();
+      }
+      
+      //digital
+      var dig = $scope.devs[id].digital;
+      $scope.digital= dig;
+      $(".digital option[value="+dig+"]").attr("selected",true);
+      
+      //digital
+      var digport = $scope.devs[id].digitalport;
+      $scope.digitalport= digport;
+      $(".digitalport option[value="+digport+"]").attr("selected",true);
+
+      //local
+      var loc =$scope.devs[id].room;
+      $scope.localmodel= loc;
+      $(".local option[value="+loc+"]").attr("selected",true);
   }
-    
 
-    $scope.updatename= function() {
-      var upname= {id:$scope.deviceID,name:$scope.namemodel};
+  $scope.updateName= function() {
+      //console.log($(".devname").val());
+      var newname = $(".devname").val();
+      var upname= {id:$scope.devID,name:newname };
       socket.emit('update:name', upname);
-     }
+      $("."+$scope.stringID+"").text(newname);
+      $scope.devs[$scope.devID].name=newname;
+  }
 
-    $scope.updateStatus= function() {
-      var stat = $("select.status").val();
-      var msg = {id:$scope.deviceID, status:stat};
-      console.log(stat);
-      socket.emit('send:status', msg);      
-    }
-    $scope.updateLocal= function() {
-      console.log($("select.local").val());
-    }
+  $scope.updateStatus= function() {
+     var stat = $("select.status").val();
+     var msg = {id:$scope.devID, status:stat};
+     console.log(stat);
+     socket.emit('send:status', msg); 
+     //devia-se bloquear ate se actualizar     
+  }
+
+  $scope.updateAnalog = function(){
+    //console.log($('select.analog').val());
+    var upAnalog= {id:$scope.devID,analog:$('select.analog').val()};
+     $scope.devs[$scope.devID].analog = $('select.analog').val();
+    socket.emit('update:analog', upAnalog);
+  }
+
+  $scope.updateDigital = function(){
+    //console.log($('select.digital').val());
+    var upDigital= {id:$scope.devID,digital:$('select.digital').val()};
+    $scope.devs[$scope.devID].digital = $('select.digital').val();
+    socket.emit('update:digital', upDigital);
+  }
+
+  $scope.upDigitalPort = function(){
+    //console.log($('select.digitalport').val());
+    var upDigitalPort= {id:$scope.devID,digitalport:$('select.digitalport').val()};
+    $scope.devs[$scope.devID].digitalport = $('select.digitalport').val();
+    socket.emit('update:digitalport', upDigitalPort);
+  }
+
+  $scope.updateLocal= function() {
+     //console.log($("select.local").val());
+    var upLocal= {id:$scope.devID,room:$("select.local").val()};
+    $scope.devs[$scope.devID].room = $("select.local").val();
+    socket.emit('update:room', upLocal);
+  }
 
     //communication
-    socket.on('update:status', function (data) {
-      
-    });
-
+  socket.on('update:status', function (data) {
+       
+  });
 
 }).
 
 controller('HomePlanController', function ($scope, $http, socket) {
 });
+
+
 /*
 controller('MapController', function ($scope, $http, socket) {
 
@@ -196,14 +254,4 @@ setInterval(function() { socket.emit('message', { name: 'jose'}) }, 100000)
       svg.select(id).style('fill', color);
     };
 
-  }).
-  controller('ManagerController', function ($scope, $http) {
-    $http({method: 'GET', url: '/api/trashes'})
-      .success(function(data, status, headers, config) {
-        $scope.trashes = data.trashes;
-      })
-      .error(function(data, status, headers, config) {
-        
-      });
-  });
 */

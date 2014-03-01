@@ -3,28 +3,51 @@ var mongoose = require('mongoose');
 var deviceSchema = new mongoose.Schema({
   id: {type: Number, unique: true },
   name: String, 
-  status: String, //ON-1 or OFF-0
+  status: String, 
+  analog: String,
+  digital: String, 
+  digitalport: String,
   room: String ,
   /*position: { //posição na room
     x: Number,
     y: Number,
     r: Number
   },*/
-  temperature: Number
-
 });
 var Device = mongoose.model( 'Device', deviceSchema );
 
 //exemplo
-Device.create({ id: 1, name: 'Tv',status: 'on', room: 'kitchen'}, function (err, trash) {
-  if (err) console.error('trash duplicated');
+Device.create({ id: 1, 
+                name: 'Tv',
+                status: 'on',
+                analog: 'Brightness',
+                digital: 'irreceiver', 
+                digitalport: 'enable',
+                room: 'kitchen'
+              },function (err, trash) {
+              if (err) console.error('trash duplicated');
 });
-Device.create({ id: 2, name: 'Heater',status: 'off', room: 'seixasroom'}, function (err, trash) {
-  if (err) console.error('trash duplicated');
+Device.create({ id: 2, 
+                name: 'Heater',
+                status: 'off',
+                analog: 'Temperature',
+                digital: 'irreceiver', 
+                digitalport: 'enable',
+                room: 'manuroom'
+              },function (err, trash) {
+              if (err) console.error('trash duplicated');
 });
-Device.create({ id: 3, name: 'Lights',status: 'off', room: 'manuroom'}, function (err, trash) {
-  if (err) console.error('trash duplicated');
+Device.create({ id: 3, 
+                name: 'Lights',
+                status: 'on',
+                analog: 'x',
+                digital: 'irreceiver', 
+                digitalport: 'enable',
+                room: 'seixasroom'
+              },function (err, trash) {
+              if (err) console.error('trash duplicated');
 });
+
 if(process.env.VCAP_SERVICES){
     var env = JSON.parse(process.env.VCAP_SERVICES);
     var mongo = env['mongodb-1.8'][0]['credentials'];
