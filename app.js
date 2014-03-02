@@ -72,9 +72,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('update:digital', function (data) {
     updateDigitalType(data);
   });
-  socket.on('update:digitalport', function (data) {
-    updateDigitalPort(data);
-  });
   socket.on('update:room', function (data) {
     updateLocal(data);
   });
@@ -97,27 +94,48 @@ var listsockets = [];
 
 var TCPserver = net.createServer(function(sock) { //'connection' listener
   console.log('server connected');
-  var deviceId = 0;
+  var deviceId;
   sock.on('data', function(data) {
-    console.log('Recebido' + data);
+    console.log('Recebido ' + data);
+    
     var received = splitData(String(data));
     deviceId = parseInt(received.id);
     console.log(deviceId);
-    listsockets[deviceId]=sock;
+    if(received.mgs1=="in"){
+      console.log(received.mgs1);
+      listsockets[deviceId]=sock;
+      //sock.write('O');
+    } else{
+       console.log(received.mgs1);
+      /*io.sockets.on('connection', require('./routes/socket'));
+        var socketIO;
+        //io.sockets.on('connection', function (socket) {
+          //socketIO=socket;
+          //var status ={id:$scope.devID, status:received.mgs1};
+          //socket.emit('update:status', status);
+          console.log(received.mgs1);
+          console.log(received.mgs3);
+        //})*/
+    }
   });
+    
   io.sockets.on('connection', function (socket) {
     socketIO=socket;
     socket.on('send:status', function (data) {
       var id = parseInt(data.id);
-      console.log(id);
       if(id==deviceId){
         listsockets[id].write(data.status);
-        console.log(data.status + ' aquli');
+        console.log(data.status + ' ->tcp');
       }
-  });
+    });
+    socket.on('update:digitalport', function (data) {
+      var id = parseInt(data.id);
+      if(id==deviceId){
+        listsockets[id].write(data.digitalport);
+        console.log(data.digitalport + ' ->tcp');
+      }
+    });
 })
-
- 
 
   sock.on('end', function() {
     console.log('server disconnected');
@@ -144,10 +162,10 @@ var updateAnalog = function(dev){
 var updateDigitalType = function(dev){
     Device.update({ id: dev.id }, { $set: { digital: dev.digital } }).exec();
 }
-
+/*
 var updateDigitalPort = function(dev){
     Device.update({ id: dev.id }, { $set: { digitalport: dev.digitalport } }).exec();
-}
+}*/
 
 var updateLocal = function(dev){
     Device.update({ id: dev.id }, { $set: { room: dev.room } }).exec();
@@ -157,7 +175,11 @@ var updateLocal = function(dev){
 
 var splitData  = function(data){
   var dataSplit = data.split('|');
-  var received = {id:dataSplit[0], mgs:dataSplit[1]};
+   if(dataSplit[1]=='in'){
+      var received = {id:dataSplit[0], mgs1:dataSplit[1]};
+   }else{
+    var received = {id:dataSplit[0], mgs1:dataSplit[1],mgs2:dataSplit[2],mgs3:dataSplit[3]};
+   }  
   return received;
 };
 

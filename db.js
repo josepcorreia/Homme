@@ -18,9 +18,9 @@ var Device = mongoose.model( 'Device', deviceSchema );
 
 //exemplo
 Device.create({ id: 1, 
-                name: 'Tv',
-                status: 'on',
-                analog: 'Brightness',
+                name: 'Coffee Machine',
+                status: 'off',
+                analog: 'Temperature',
                 digital: 'irreceiver', 
                 digitalport: 'enable',
                 room: 'kitchen'
@@ -38,9 +38,9 @@ Device.create({ id: 2,
               if (err) console.error('trash duplicated');
 });
 Device.create({ id: 3, 
-                name: 'Lights',
+                name: 'Tv',
                 status: 'on',
-                analog: 'x',
+                analog: 'none',
                 digital: 'irreceiver', 
                 digitalport: 'enable',
                 room: 'seixasroom'

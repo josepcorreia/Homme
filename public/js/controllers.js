@@ -58,16 +58,18 @@ controller('DeviceController', function ($scope, $http, socket) {
       $(".status option[value="+stat+"]").attr("selected",true);
       
       //Analog
-      if($scope.devs[id].analog=='x'){
+      if($scope.devs[id].analog=='none'){
         var anl ="None";
         $scope.analog=anl;
         $(".analog option[value="+anl+"]").attr("selected",true);
         $scope.analogTest=true;
+        $scope.analogdata = " ";
       }else{
         var anl = $scope.devs[id].analog;
         $scope.analog=anl;
         $(".analog option[value="+anl+"]").attr("selected",true);
         $scope.analogTest=false;
+        $scope.analogdata = "22 °C";
         //$(".analog option[value='None']").remove();
       }
       
@@ -85,6 +87,11 @@ controller('DeviceController', function ($scope, $http, socket) {
       var loc =$scope.devs[id].room;
       $scope.localmodel= loc;
       $(".local option[value="+loc+"]").attr("selected",true);
+  }
+
+  $scope.showOptions = function() { 
+    $scope.selection="options";
+  
   }
 
   $scope.updateName= function() {
@@ -134,7 +141,7 @@ controller('DeviceController', function ($scope, $http, socket) {
 
     //communication
   socket.on('update:status', function (data) {
-       
+       console.log(data);
   });
 
 }).

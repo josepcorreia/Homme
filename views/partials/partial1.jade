@@ -16,7 +16,7 @@ div.container.theme-showcase(role="main")
 				div.panel-body
 					div.panel-body(ng-switch on="selection")
 						div.device(ng-switch-when="withoutdev") 
-							h3 Qualquer coisa
+							h3 Monitor and control your devices
 						div.device(ng-switch-when="device")
 							form.deviceform(role='form')
 								div.info
@@ -64,4 +64,29 @@ div.container.theme-showcase(role="main")
 										option(value='rafaelroom') Rafael's Room
 										option(value='seixasroom') Seixas' Room
 										option(value='zeroom') Zé's Room
-								//button.btn.btn-default(type='submit') Edit
+								div.info
+									button.btn.btn-default(type="button", ng-click="showOptions()") Options 
+						div.device(ng-switch-when="options")
+							div
+								label Timer ON:
+								form.form-inline(role="form")
+									label From:
+									div.form-group
+										input#datetime.form-control(type="datetime-local") 
+									label  To:
+									div.form-group
+										input#datetime.form-control(type="datetime-local")
+									button.btn.btn-default(type="submit") Submit
+									p
+							div 
+								label Heater ON:
+								form.form-inline(role="form")
+									label From:
+									div.form-group
+										input.form-control(type="Number") 
+									label°C To:
+									div.form-group
+										input.form-control(type="Number")
+										label°C
+									button.btn.btn-default(type="submit") Submit
+
