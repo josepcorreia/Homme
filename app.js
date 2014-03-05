@@ -104,9 +104,13 @@ var TCPserver = net.createServer(function(sock) { //'connection' listener
     if(received.mgs1=="in"){
       console.log(received.mgs1);
       listsockets[deviceId]=sock;
-      //sock.write('O');
     } else{
-       console.log(received.mgs1);
+      console.log(received.status);
+      updateStatus(deviceId, received.status);
+
+      console.log(received.digital);
+      updateDigitalPort(deviceId, received.digital)
+
       /*io.sockets.on('connection', require('./routes/socket'));
         var socketIO;
         //io.sockets.on('connection', function (socket) {
@@ -162,26 +166,34 @@ var updateAnalog = function(dev){
 var updateDigitalType = function(dev){
     Device.update({ id: dev.id }, { $set: { digital: dev.digital } }).exec();
 }
-/*
-var updateDigitalPort = function(dev){
-    Device.update({ id: dev.id }, { $set: { digitalport: dev.digitalport } }).exec();
-}*/
 
 var updateLocal = function(dev){
     Device.update({ id: dev.id }, { $set: { room: dev.room } }).exec();
 }
 
-
-
+//split the receive data
 var splitData  = function(data){
   var dataSplit = data.split('|');
    if(dataSplit[1]=='in'){
       var received = {id:dataSplit[0], mgs1:dataSplit[1]};
    }else{
-    var received = {id:dataSplit[0], mgs1:dataSplit[1],mgs2:dataSplit[2],mgs3:dataSplit[3]};
+    var received = {id:dataSplit[0], status:dataSplit[1],analogic:dataSplit[2],digital:dataSplit[3]};
    }  
   return received;
 };
+
+//update the devicce's status that octonoff sends
+var updateStatus = function(devid, stat){
+    Device.update({ id: devid }, { $set: { status: stat } }).exec();
+    //send by socket io  
+}
+
+//update the devicce's digital port, that octonoff sends
+var updateDigitalPort = function(devid, digitalport){
+    Device.update({ id: devid }, { $set: { digitalport: digitalport } }).exec();
+    //send by socket io 
+}
+
 
 /*
     socketIO.emit('update:trash', send); 
