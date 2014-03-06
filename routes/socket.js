@@ -12,25 +12,24 @@ module.exports = function (socket) {
 		socket.broadcast.emit('response', data);
 	});
 
-	socket.on('update:status', function (data) {
-		socket.emit('update:status', data);
-		socket.broadcast.emit('update:status', data);
-	});
-/*
-	socket.on('register:trash', function (trash) {
-		Trash.create(trash, function (err, trash) {
-  			if (err) console.error('trash duplicated');
-
-  			socket.emit('register:trash', trash);
-			socket.broadcast.emit('register:trash', trash);
-  			// saved!
-		});
-	});
-
-	socket.on('update:trash', function (data) {
-		Trash.update({ name: data.name }, { $set: { level: data.level } }).exec();
-		
-		socket.emit('update:trash', data);
-		socket.broadcast.emit('update:trash', data);
-	})*/
+	socket.on('update:name', function (data) {
+    	Device.update({ id: data.id }, { $set: { name: data.name } }).exec();
+    	socket.emit('up:name', data);
+		socket.broadcast.emit('up:name', data);
+  	});
+  	socket.on('update:analog', function (data) {
+    	 Device.update({ id: data.id }, { $set: { analog: data.analog } }).exec();
+    	 socket.emit('up:analog', data);
+		 socket.broadcast.emit('up:analog', data);
+  	});
+  	socket.on('update:digital', function (data) {
+   		Device.update({ id: data.id }, { $set: { digital: data.digital } }).exec();
+   		socket.emit('up:digital', data);
+		socket.broadcast.emit('register:data', data);
+  	});
+  	socket.on('update:room', function (data) {
+    	Device.update({ id: data.id }, { $set: { room: data.room } }).exec();
+    	socket.emit('up:room', data);
+		  socket.broadcast.emit('up:room', data);
+  	});
 };

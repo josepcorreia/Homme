@@ -63,18 +63,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('message', function (data) {
     console.log(data);
   });
-  socket.on('update:name', function (data) {
-    updateDevName(data);
-  });
-  socket.on('update:analog', function (data) {
-    updateAnalog(data);
-  });
-  socket.on('update:digital', function (data) {
-    updateDigitalType(data);
-  });
-  socket.on('update:room', function (data) {
-    updateLocal(data);
-  });
 })
 
 /**
@@ -105,26 +93,18 @@ var TCPserver = net.createServer(function(sock) { //'connection' listener
       console.log(received.mgs1);
       listsockets[deviceId]=sock;
     } else{
-      console.log(received.status);
+      console.log(received.status+ 'status');
       updateStatus(deviceId, received.status);
 
-      console.log(received.digital);
-      updateDigitalPort(deviceId, received.digital)
+      console.log(received.analog + 'analog');
+      updateAnalogData(deviceId, received.analog)
 
-      /*io.sockets.on('connection', require('./routes/socket'));
-        var socketIO;
-        //io.sockets.on('connection', function (socket) {
-          //socketIO=socket;
-          //var status ={id:$scope.devID, status:received.mgs1};
-          //socket.emit('update:status', status);
-          console.log(received.mgs1);
-          console.log(received.mgs3);
-        //})*/
+      console.log(received.digital+ ' port');
+      updateDigitalPort(deviceId, received.digital);
     }
   });
     
   io.sockets.on('connection', function (socket) {
-    socketIO=socket;
     socket.on('send:status', function (data) {
       var id = parseInt(data.id);
       if(id==deviceId){
@@ -155,29 +135,13 @@ TCPserver.listen(PORT, function() { //'listening' listener
  var mongoose = require('mongoose');
  var Device = mongoose.model( 'Device' );
 
- var updateDevName = function(dev){
-    Device.update({ id: dev.id }, { $set: { name: dev.name } }).exec();
- }
-
-var updateAnalog = function(dev){
-    Device.update({ id: dev.id }, { $set: { analog: dev.analog } }).exec();
-}
-
-var updateDigitalType = function(dev){
-    Device.update({ id: dev.id }, { $set: { digital: dev.digital } }).exec();
-}
-
-var updateLocal = function(dev){
-    Device.update({ id: dev.id }, { $set: { room: dev.room } }).exec();
-}
-
 //split the receive data
 var splitData  = function(data){
   var dataSplit = data.split('|');
    if(dataSplit[1]=='in'){
       var received = {id:dataSplit[0], mgs1:dataSplit[1]};
    }else{
-    var received = {id:dataSplit[0], status:dataSplit[1],analogic:dataSplit[2],digital:dataSplit[3]};
+    var received = {id:dataSplit[0], status:dataSplit[1],analog:dataSplit[2],digital:dataSplit[3]};
    }  
   return received;
 };
@@ -185,18 +149,23 @@ var splitData  = function(data){
 //update the devicce's status that octonoff sends
 var updateStatus = function(devid, stat){
     Device.update({ id: devid }, { $set: { status: stat } }).exec();
+    var msg = {id:devid, status:stat};
+    socketIO.emit('receive:status',msg );
+    socketIO.broadcast.emit('receive:status', msg);
     //send by socket io  
+}
+
+var updateAnalogData = function(devid, analogdata){
+    var msg = {id:devid, status:analogdata};
+    socketIO.emit('receive:analogdata', msg);
+    socketIO.broadcast.emit('receive:analogdata', msg);
+ 
 }
 
 //update the devicce's digital port, that octonoff sends
 var updateDigitalPort = function(devid, digitalport){
-    Device.update({ id: devid }, { $set: { digitalport: digitalport } }).exec();
-    //send by socket io 
+    Device.update({ id: devid }, { $set: { digitalport: digitalport } }).exec();    
+    var msg = {id:devid, digitalport:digitalport};
+    socketIO.emit('receive:digitalport', msg);
+    socketIO.broadcast.emit('receive:digitalport',msg);
 }
-
-
-/*
-    socketIO.emit('update:trash', send); 
-    socketIO.broadcast.emit('update:trash', send); 
-Trash.update({ name: dataSplit[0] }, { $set: { level: dataSplit[1] } }).exec();
-*/
