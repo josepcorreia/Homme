@@ -19,30 +19,30 @@ var Device = mongoose.model( 'Device', deviceSchema );
 //exemplo
 Device.create({ id: 1, 
                 name: 'Coffee Machine',
-                status: 'off',
+                status: 'OFF',
                 analog: 'Temperature',
                 digital: 'irreceiver', 
-                digitalport: 'enable',
+                digitalport: 'D',
                 room: 'kitchen'
               },function (err, trash) {
               if (err) console.error('trash duplicated');
 });
 Device.create({ id: 2, 
                 name: 'Heater',
-                status: 'off',
+                status: 'OFF',
                 analog: 'Temperature',
                 digital: 'irreceiver', 
-                digitalport: 'enable',
+                digitalport: 'E',
                 room: 'manuroom'
               },function (err, trash) {
               if (err) console.error('trash duplicated');
 });
 Device.create({ id: 3, 
                 name: 'Tv',
-                status: 'on',
+                status: 'ON',
                 analog: 'none',
                 digital: 'irreceiver', 
-                digitalport: 'enable',
+                digitalport: 'E',
                 room: 'seixasroom'
               },function (err, trash) {
               if (err) console.error('trash duplicated');

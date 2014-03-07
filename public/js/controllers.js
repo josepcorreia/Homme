@@ -51,13 +51,15 @@ controller('DeviceController', function ($scope, $http, socket) {
       //title //id
       $scope.devTitle=$scope.devId + ': ' +$scope.devs[id].name;
 
-      //FORM - name
+      //FORM - name(na primeira vez o mdel funciona, e o jquery nao, das outras é ao contrario)
       $scope.devname=$scope.devs[id].name;
-      
+      $(".devname").val($scope.devs[id].name);
+
+
       //status
       var stat= $scope.devs[id].status;
       $scope.status= stat;
-      $(".status option[value="+stat+"]").attr("selected",true);
+      $(".status").val(stat);
       
       //Analog
       if($scope.devs[id].analog=='none'){
@@ -78,57 +80,53 @@ controller('DeviceController', function ($scope, $http, socket) {
       //digital
       var dig = $scope.devs[id].digital;
       $scope.digital= dig;
-      $(".digital option[value="+dig+"]").attr("selected",true);
+      $(".digital").val(dig);
       
-      //digital
+      //digitalport
       var digport = $scope.devs[id].digitalport;
       $scope.digitalport= digport;
-      $(".digitalport option[value="+digport+"]").attr("selected",true);
+      $(".digitalport").val(digport);
 
       //local
       var loc =$scope.devs[id].room;
       $scope.localmodel= loc;
-      $(".local option[value="+loc+"]").attr("selected",true);
+      $(".local").val(loc);
   }
 
   $scope.showOptions = function() { 
     $scope.selection="options";
-  
   }
 
   $scope.updateName= function() {
-      //console.log($(".devname").val());
       var newname = $(".devname").val();
       var upname= {id:$scope.devId,name:newname };
       socket.emit('update:name', upname);
       $("."+$scope.stringID+"").text(newname);
       $scope.devs[$scope.devId].name=newname;
+      $scope.devTitle=$scope.devId + ': ' +$scope.devs[$scope.devId].name;
   }
 
   $scope.updateStatus= function() {
      var stat = $("select.status").val();
      var msg = {id:$scope.devId, status:stat};
-     console.log(stat);
+     console.log(stat+'teste');
      socket.emit('send:status', msg); 
      //devia-se bloquear ate se actualizar     
   }
 
   $scope.updateAnalog = function(){
-    //console.log($('select.analog').val());
     var upAnalog= {id:$scope.devId,analog:$('select.analog').val()};
      $scope.devs[$scope.devId].analog = $('select.analog').val();
     socket.emit('update:analog', upAnalog);
   }
 
   $scope.updateDigital = function(){
-    //console.log($('select.digital').val());
     var upDigital= {id:$scope.devId,digital:$('select.digital').val()};
     $scope.devs[$scope.devId].digital = $('select.digital').val();
     socket.emit('update:digital', upDigital);
   }
 
   $scope.upDigitalPort = function(){
-    //console.log($('select.digitalport').val());
     var upDigitalPort= {id:$scope.devId,digitalport:$('select.digitalport').val()};
     $scope.devs[$scope.devId].digitalport = $('select.digitalport').val();
     socket.emit('update:digitalport', upDigitalPort);
@@ -142,16 +140,55 @@ controller('DeviceController', function ($scope, $http, socket) {
   }
   
     //communication
+  //from octooff
   socket.on('receive:status', function (data) {
+    $scope.devs[data.id].status= data.status;
     if(data.id==$scope.devId){
       //$scope.status= data.status;
-      $(".status option[value="+data.status+"]").attr("selected",true);  
+      $(".status").val(data.status);
+      $scope.status=data.status;
     }
   });
   socket.on('receive:digitalport', function (data) {
-       if(data.id==$scope.devId){
-     // $scope.digitalport= data.digitalport;
-      $(".digitalport option[value="+data.digitalport+"]").attr("selected",true); 
+      $scope.devs[data.id].digitalport= data.digitalport;
+      if(data.id==$scope.devId){
+      $(".digitalport").val(data.digitalport); 
+    }
+  });
+
+  //from other clients
+  socket.on('up:name', function (data) {
+      $("."+data.id+"").text(data.name);
+      $scope.devs[data.id].name=data.name;
+      if(data.id==$scope.devId){
+        $(".devname").val(data.name);
+        $scope.devTitle=$scope.devId + ': ' +$scope.devs[$scope.devId].name;
+      }
+  });
+  socket.on('up:analog', function (data) {
+      $scope.devs[data.id]=data.analog;
+      if(data.analog=='none'){
+        var anl ="None";
+        $(".analog").val(anl);
+        $scope.analogTest=true;
+        $scope.analogdata = " ";
+      }else{
+        $(".analog").val(data.analog);
+        $scope.analogTest=false;
+        $scope.analogdata = "21 °C";
+      }
+  });
+  socket.on('up:digital', function (data) {
+      $scope.devs[data.id].digital= data.digital;
+      if(data.id==$scope.devId){
+        $(".digital").val(data.digital);
+      }
+  });
+    
+  socket.on('up:room', function (data) {
+    $scope.devs[data.id].room = data.room;
+    if(data.id==$scope.devId){
+      $(".local").val(data.room);
     }
   });
 

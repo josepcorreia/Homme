@@ -93,6 +93,7 @@ var TCPserver = net.createServer(function(sock) { //'connection' listener
       console.log(received.mgs1);
       listsockets[deviceId]=sock;
     } else{
+      listsockets[deviceId]=sock;
       console.log(received.status+ 'status');
       updateStatus(deviceId, received.status);
 

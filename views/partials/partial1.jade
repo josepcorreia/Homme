@@ -6,8 +6,8 @@ div.container.theme-showcase(role="main")
 			div.panel-body
 				div.panel-body
 					ul.nav.nav-pills.nav-stacked
-						li(ng-repeat="device in devices",ng-class="{true:'active', false:''}[device.id==devID]", ng-click="selectdev(device.id)")  
-							a(ng-href="",ng-class="{true:deviceID, false:''}[device.id==devID]") {{device.name}}
+						li(ng-repeat="device in devices",ng-class="{true:'active', false:''}[device.id==devId]", ng-click="selectdev(device.id)")  
+							a(ng-href="",ng-class="{true:deviceID, false:''}[device.id==devId]") {{device.name}}
 
 	div.dev
 		div.panel.panel-default
