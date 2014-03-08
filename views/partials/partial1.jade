@@ -23,42 +23,42 @@ div.container.theme-showcase(role="main")
 									div.form-group.left
 										label Name of device
 										div.input-group
-											input.form-control.devname(type='text',ng-model="devname")
+											input.form-control.devname(type='text',ng-model="devname[devId]")
 											span.input-group-btn
 												button.btn.btn-default(type="button",ng-click="updateName()") Submit
 									div.form-group.right
 										label Select status of device
-										select.status.form-control(ng-model="status", ng-change="updateStatus()")
+										select.status.form-control(ng-model="status[devId]", ng-change="updateStatus()")
 													option(value='ON') ON
 													option(value='OFF') OFF
 								div.info
 									div.form-group.left
 										label Analog Sensor Type
-										select.analog.form-control(ng-model="analog",ng-disabled="analogTest", ng-change="updateAnalog()")
+										select.analog.form-control(ng-model="analog[devId]",ng-disabled="analogTest[devId]", ng-change="updateAnalog()")
 											option(value='None') None
 											option(value='Brightness') Brightness
 											option(value='Proximity') Proximity
 											option(value='Temperature') Temperature
 									div.form-group.right
-										label {{analog}}
-										input.form-control(type='text',ng-model="analogdata", disabled="disabled")
+										label {{analog[devId]}}
+										input.analogdata.form-control(type='text',ng-model="analogdata[devId]", disabled="disabled")
 
 								div.info
 									div.form-group.left
 										label Digital Type
-										select.digital.form-control(ng-model="digital", ng-change="updateDigital()")
+										select.digital.form-control(ng-model="digital[devId]", ng-change="updateDigital()")
 											option(value='None') None
 											option(value='irreceiver') IR Receiver
 											option(value='irtransmitter') IR Trasmitter
 									div.form-group.right
 										label Digital Port
-										select.digitalport.form-control(ng-model="digitalport", ng-change="upDigitalPort()")
+										select.digitalport.form-control(ng-model="digitalport[devId]", ng-change="upDigitalPort()")
 											option(value='E') Enable
 											option(value='D') Disabled
 									
 								div.form-group
 									label Location of device
-									select.local.form-control(ng-model="localmodel", ng-change="updateLocal()")
+									select.local.form-control(ng-model="local[devId]", ng-change="updateLocal()")
 										option(value='kitchen') Kitchen
 										option(value='manuroom') Manu's Room
 										option(value='rafaelroom') Rafael's Room

@@ -82,6 +82,7 @@ var listsockets = [];
 
 var TCPserver = net.createServer(function(sock) { //'connection' listener
   console.log('server connected');
+
   var deviceId;
   sock.on('data', function(data) {
     console.log('Recebido ' + data);
@@ -92,12 +93,15 @@ var TCPserver = net.createServer(function(sock) { //'connection' listener
     if(received.mgs1=="in"){
       console.log(received.mgs1);
       listsockets[deviceId]=sock;
+      //force auto reload
+      socketIO.emit('refresh:page', { bool: true});
+      socketIO.broadcast.emit('refresh:page',{ bool: true});
     } else{
       listsockets[deviceId]=sock;
       console.log(received.status+ 'status');
       updateStatus(deviceId, received.status);
 
-      console.log(received.analog + 'analog');
+      console.log(received.analog + 'analogdata');
       updateAnalogData(deviceId, received.analog)
 
       console.log(received.digital+ ' port');
@@ -147,7 +151,7 @@ var splitData  = function(data){
   return received;
 };
 
-//update the devicce's status that octonoff sends
+//update the device's status that octonoff sends
 var updateStatus = function(devid, stat){
     Device.update({ id: devid }, { $set: { status: stat } }).exec();
     var msg = {id:devid, status:stat};
@@ -157,9 +161,12 @@ var updateStatus = function(devid, stat){
 }
 
 var updateAnalogData = function(devid, analogdata){
-    var msg = {id:devid, status:analogdata};
+    var msg = {id:devid, analogdata:analogdata};
     socketIO.emit('receive:analogdata', msg);
     socketIO.broadcast.emit('receive:analogdata', msg);
+    if(analogdata=='x'){
+      Device.update({ id: devid }, { $set: { analog: 'None' } }).exec();
+    }
  
 }
 
