@@ -44,6 +44,7 @@ controller('DeviceController', function ($scope, $http, socket) {
   $scope.status = [];
   $scope.analog = [];
   $scope.analogdata = [];
+  $scope.anlg_original = [];
   $scope.digital = [];
   $scope.digitalport = [];
   $scope.local = [];
@@ -69,6 +70,7 @@ controller('DeviceController', function ($scope, $http, socket) {
       //$(".status").val(stat);
       
       //Analog
+      $scope.anlg_original[id] = 231;
       if($scope.devs[id].analog=='None'){
         $scope.analog[id]= "None";
         //$(".analog option[value="+anl+"]").attr("selected",true);
@@ -79,7 +81,6 @@ controller('DeviceController', function ($scope, $http, socket) {
         $scope.analog[id] = $scope.devs[id].analog;
         //$(".analog option[value="+anl+"]").attr("selected",true);
         $scope.analogTest[id]=false;
-        $scope.analogdata[id] = "22 °C";
       }
       
       //digital
@@ -122,6 +123,17 @@ controller('DeviceController', function ($scope, $http, socket) {
     //var upAnalog= {id:$scope.devId,analog:$('select.analog').val()};
     var upAnalog= {id:$scope.devId,analog:$scope.analog[$scope.devId]};
     $scope.devs[$scope.devId].analog = $scope.analog[$scope.devId];
+
+    //depois refactorizar
+    if($scope.analog[$scope.devId] =="Brightness"){
+      $scope.analogdata[$scope.devId]=(($scope.anlg_original[$scope.devId]*100)/600) + '%';
+    }else if($scope.analog[$scope.devId] =="Temperature"){
+      $scope.analogdata[$scope.devId]="24 °C";
+    }else if($scope.analog[$scope.devId] =='Proximity'){
+      $scope.analogdata[$scope.devId]='3 m';
+    } 
+     
+
     // = $('select.analog').val();
     socket.emit('update:analog', upAnalog);
   }
@@ -166,16 +178,21 @@ controller('DeviceController', function ($scope, $http, socket) {
   });
   socket.on('receive:analogdata', function (data) {
     var anlgdata = data.analogdata;
-    if(anlgdata== 'x'){
-      $scope.analogTest[data.id]=true;
-      $scope.analog[data.id]= "None";
-      $scope.analogdata[data.id] = " ";
-    } else{
-      $scope.analogTest[data.id]=false;
-      $scope.analogdata[data.id] = data.analogdata;
-      //fazer funçao de calculo  
-    }
-   
+    $scope.anlg_original[data.id]=anlgdata;
+      if(anlgdata== 'x'){
+        $scope.analogTest[data.id]=true;
+        $scope.analog[data.id]= "None";
+        $scope.analogdata[data.id] = " ";
+      } else{
+        $scope.analogTest[data.id]=false;
+        if($scope.analog[data.id] =="Brightness"){
+          $scope.analogdata[$scope.devId]=((anlgdata*100)/600) + '%';
+        }else if($scope.analog[data.id] =="Temperature"){
+          $scope.analogdata[data.id]="24 °C";
+        }else if($scope.analog[data.id] =='Proximity'){
+         $scope.analogdata[data.id]='3 m';
+        } 
+      }
   });
 
   //from other clients
@@ -217,5 +234,109 @@ controller('DeviceController', function ($scope, $http, socket) {
 
 }).
 
+controller('CivilController', function ($scope, $http, socket) {
+  var svg = d3.select('#civil');
+  var div = d3.select("body").append("div")   
+      .attr("class", "tooltip")               
+      .style("opacity", 0);
+
+  $scope.devs = []; 
+
+  $http({method: 'GET', url: '/api/devices'})
+      .success(function(data, status, headers, config) {
+        $scope.devices = data.devices;
+        $scope.devices.forEach(function (device) {
+           //pedrada
+           if(device.room=='civil'){
+            $scope.devs.push(device);
+           }
+        });
+        insertDevice(); 
+      })
+      .error(function(data, status, headers, config) {
+  });
+
+  $scope.selected = false;
+
+  var insertDevice = function () {
+      svg.selectAll('div').data($scope.devs).enter().append("rect")
+        .attr("x", function (d) { return d.position.x; })
+        .attr("y", function (d) { return d.position.y; })
+        .attr('transform', 'translate(0,-40)')
+        .attr("width", 80)
+        .attr("height", 120)
+        .style({'background-color':'darkkhaki','opacity':0.3})
+        .on('click', function (d) {
+          console.log(d);
+          $scope.showupdatebox(d);
+        })
+      
+      svg.selectAll('div').data($scope.devs).enter().append("svg:image")
+        .attr('id', function (d) { return d.id; })
+        .attr("xlink:href",  function (d) { return d.url; })
+        .attr("x", function (d) { return d.position.x; })
+        .attr("y", function (d) { return d.position.y; })
+        .attr("width", "80")
+        .attr("height", "80")
+        .on('click', function (d) {
+          console.log(d);
+          $scope.showupdatebox(d);
+        })
+      
+      svg.selectAll('div').data($scope.devs).enter().append("text")
+        .attr('id', function (d) { return d.id; })
+        .text(function(d) { return d.name;}) 
+        .attr('transform', 'translate(0,-20)')
+        .attr("x", function (d) { return d.position.x; })
+        .attr("y", function (d) { return d.position.y; })
+        .attr("font-family", "Open Sans")
+        .attr("font-size", "16px")
+        .attr("fill", "black")
+        .on('click', function (d) {
+          console.log(d);
+          $scope.showupdatebox(d);
+        })
+
+      svg.selectAll('div').data($scope.devs).enter().append("text")
+        .attr('id', function (d) { return d.id; })
+        .text(function(d) {return "Status: " + d.status;})
+        .attr("x", function (d) { return d.position.x; })
+        .attr("y", function (d) { return d.position.y; })
+        .attr("font-family", "Open Sans")
+        .attr("font-size", "14px")
+        .attr("fill", "black")
+        .on('click', function (d) {
+          console.log(d);
+          $scope.showupdatebox(d);
+        })
+    };
+
+  $scope.showupdatebox = function(dev){
+    $scope.selected = true;
+  }
+
+}).
+
 controller('HomePlanController', function ($scope, $http, socket) {
+  //mensageem que depois deixa o socket no server guardado, para envair posteriormente os dados
+  socket.emit('message', { name: 'jose'});
+  
+  $scope.roomTitle="Kitchen";
+  $scope.room_selected = 'Kitchen';
+  $scope.selection="kitchen";
+
+  $scope.rooms = [{room:'Kitchen'},{room:'Manu\'s Room'},{room:'Rafael\'s Room'},{room:'Seixas\' Room'},{room:'Zé\'s Room'}]
+  $scope.selectroom = function(room) {
+    $scope.roomTitle=room; 
+    $scope.room_selected = room;
+    if(room.substr(room.length - 4)=='Room'){
+      $scope.selection="bedroom";
+    }else if(room == 'Kitchen'){
+      $scope.selection="kitchen";
+    }
+  }
+  var svg = d3.select('#floorplan');
+  var div = d3.select("body").append("div")   
+      .attr("class", "tooltip")               
+      .style("opacity", 0);
 });

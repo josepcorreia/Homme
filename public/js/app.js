@@ -21,6 +21,10 @@ config(function ($routeProvider, $locationProvider) {
       templateUrl: 'partials/partial2',
       controller: 'HomePlanController'
     }).
+    when('/civil', {
+      templateUrl: 'partials/partial3',
+      controller: 'CivilController'
+    }).
     otherwise({
       redirectTo: '/devices'
     });

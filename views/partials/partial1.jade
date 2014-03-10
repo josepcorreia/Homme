@@ -2,12 +2,12 @@ div.container.theme-showcase(role="main")
 	div.nav-devices
 		div.panel.panel-default
 			div.panel-heading
-				h3.panel-title Choose a Device 
+				h3.panel-title Choose Device 
 			div.panel-body
 				div.panel-body
 					ul.nav.nav-pills.nav-stacked
 						li(ng-repeat="device in devices",ng-class="{true:'active', false:''}[device.id==devId]", ng-click="selectdev(device.id)")  
-							a(ng-href="",ng-class="{true:deviceID, false:''}[device.id==devId]") {{device.name}}
+							a(ng-href="") {{device.name}}
 
 	div.dev
 		div.panel.panel-default
@@ -21,13 +21,13 @@ div.container.theme-showcase(role="main")
 							form.deviceform(role='form')
 								div.info
 									div.form-group.left
-										label Name of device
+										label Name
 										div.input-group
 											input.form-control.devname(type='text',ng-model="devname[devId]")
 											span.input-group-btn
 												button.btn.btn-default(type="button",ng-click="updateName()") Submit
 									div.form-group.right
-										label Select status of device
+										label Select status
 										select.status.form-control(ng-model="status[devId]", ng-change="updateStatus()")
 													option(value='ON') ON
 													option(value='OFF') OFF
@@ -64,11 +64,12 @@ div.container.theme-showcase(role="main")
 										option(value='rafaelroom') Rafael's Room
 										option(value='seixasroom') Seixas' Room
 										option(value='zeroom') Zé's Room
+										option(value='civil') IST Congress Center
 								div.info
 									button.btn.btn-default(type="button", ng-click="showOptions()") Options 
 						div.device(ng-switch-when="options")
 							div
-								label Timer ON:
+								label Timer:
 								form.form-inline(role="form")
 									label From:
 									div.form-group
@@ -79,7 +80,7 @@ div.container.theme-showcase(role="main")
 									button.btn.btn-default(type="submit") Submit
 									p
 							div 
-								label Heater ON:
+								label {{analog[devId]}} ON:
 								form.form-inline(role="form")
 									label From:
 									div.form-group

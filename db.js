@@ -8,22 +8,24 @@ var deviceSchema = new mongoose.Schema({
   digital: String, 
   digitalport: String,
   room: String ,
-  /*position: { //posição na room
+  url: String,
+  position: { //posição na room
     x: Number,
-    y: Number,
-    r: Number
-  },*/
+    y: Number
+  }
 });
 var Device = mongoose.model( 'Device', deviceSchema );
 
 //exemplo
 Device.create({ id: 1, 
-                name: 'Coffee Machine',
+                name: 'Lights',
                 status: 'OFF',
                 analog: 'Temperature',
                 digital: 'irreceiver', 
                 digitalport: 'D',
-                room: 'kitchen'
+                room: 'civil',
+                url:'/img/lights.png',
+                position: { x: 450, y: 90}
               },function (err, trash) {
               if (err) console.error('trash duplicated');
 });
@@ -33,17 +35,21 @@ Device.create({ id: 2,
                 analog: 'Temperature',
                 digital: 'irreceiver', 
                 digitalport: 'E',
-                room: 'manuroom'
+                room: 'manuroom',
+                url:'/img/heater.png',
+                position: { x: 500, y: 265}
               },function (err, trash) {
               if (err) console.error('trash duplicated');
 });
 Device.create({ id: 3, 
                 name: 'Tv',
                 status: 'ON',
-                analog: 'none',
+                analog: 'None',
                 digital: 'irreceiver', 
                 digitalport: 'E',
-                room: 'seixasroom'
+                room: 'seixasroom',
+                url:'/img/tv.png',
+                position: { x: 400, y: 165}
               },function (err, trash) {
               if (err) console.error('trash duplicated');
 });

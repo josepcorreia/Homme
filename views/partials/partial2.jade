@@ -1,6 +1,21 @@
-svg#map
-section#legend.row
-	ul
-		li.circle-green Disponivel
-		li.circle-yellow Quase cheio
-		li.circle-red Cheio
+div.container.theme-showcase(role="main")
+	div.nav-devices
+		div.panel.panel-default
+			div.panel-heading
+				h3.panel-title Choose Room
+			div.panel-body
+				div.panel-body
+					ul.nav.nav-pills.nav-stacked
+						li(ng-repeat="room in rooms",ng-class="{true:'active', false:''}[room.room==room_selected]", ng-click="selectroom(room.room)")
+							a(ng-href="") {{room.room}}
+						
+	div.dev
+		div.panel.panel-default
+				div.panel-heading
+					h3.panel-title(ng-model="roomTitle") {{roomTitle}}   
+				div.panel-body
+					div.panel-body(ng-switch on="selection")
+						div.device(ng-switch-when="bedroom")
+							svg#room
+						div.device(ng-switch-when="kitchen")
+							svg#kitchen

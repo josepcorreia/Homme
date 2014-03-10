@@ -13,13 +13,22 @@ footer {
   text-align: center;
 }
 
-#map {
-  background: url('/img/lisbon.png') no-repeat center center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  height: 600px;
+#room {
+  background: url('/img/room.png') no-repeat top center;
+  background-size: auto 470px;
+  height: 480px;
+}
+
+#kitchen {
+  background: url('/img/kitchen.png') no-repeat top center;
+  background-size: auto 470px;
+  height: 480px;
+}
+
+
+#civil {
+  background: url('/img/civil.png') no-repeat top center;
+  height: 500px;
 }
 
 #legend {
@@ -60,11 +69,11 @@ footer {
 }
 .container > .nav-devices{
   float: left;
-  width: 25%;
+  width: 22%;
 }
 .container > .dev{
   float:right;
-  width: 70%;
+  width: 75%;
 }
 .info > .left{
   float: left;
@@ -76,4 +85,12 @@ footer {
 }
 #datetime{
   width: 235px; 
+}
+
+/**/
+#animate{
+  /*position absolute;*/
+  height: 50px;
+   width: 100px;
+   z-indez: 1;
 }
