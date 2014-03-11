@@ -126,7 +126,7 @@ controller('DeviceController', function ($scope, $http, socket) {
 
     //depois refactorizar
     if($scope.analog[$scope.devId] =="Brightness"){
-      $scope.analogdata[$scope.devId]=(($scope.anlg_original[$scope.devId]*100)/600) + '%';
+      $scope.analogdata[$scope.devId]=(($scope.anlg_original[$scope.devId]*100)/800) + '%';
     }else if($scope.analog[$scope.devId] =="Temperature"){
       $scope.analogdata[$scope.devId]="24 °C";
     }else if($scope.analog[$scope.devId] =='Proximity'){
@@ -186,7 +186,7 @@ controller('DeviceController', function ($scope, $http, socket) {
       } else{
         $scope.analogTest[data.id]=false;
         if($scope.analog[data.id] =="Brightness"){
-          $scope.analogdata[$scope.devId]=((anlgdata*100)/600) + '%';
+          $scope.analogdata[$scope.devId]=((anlgdata*100)/800) + '%';
         }else if($scope.analog[data.id] =="Temperature"){
           $scope.analogdata[data.id]="24 °C";
         }else if($scope.analog[data.id] =='Proximity'){
@@ -235,12 +235,22 @@ controller('DeviceController', function ($scope, $http, socket) {
 }).
 
 controller('CivilController', function ($scope, $http, socket) {
+  
+  //mensageem que depois deixa o socket no server guardado, para envair posteriormente os dados
+  socket.emit('message', { name: 'jose'});
+ 
+ //when a new octonoff connects, the page makes auto reload
+  socket.on('refresh:page', function (data) {
+    location.reload();
+  });
+
   var svg = d3.select('#civil');
   var div = d3.select("body").append("div")   
       .attr("class", "tooltip")               
       .style("opacity", 0);
 
   $scope.devs = []; 
+  $scope.stat = []; 
 
   $http({method: 'GET', url: '/api/devices'})
       .success(function(data, status, headers, config) {
@@ -249,75 +259,112 @@ controller('CivilController', function ($scope, $http, socket) {
            //pedrada
            if(device.room=='civil'){
             $scope.devs.push(device);
+            $scope.device = device; 
            }
         });
         insertDevice(); 
       })
       .error(function(data, status, headers, config) {
   });
+  
 
-  $scope.selected = false;
 
   var insertDevice = function () {
       svg.selectAll('div').data($scope.devs).enter().append("rect")
         .attr("x", function (d) { return d.position.x; })
         .attr("y", function (d) { return d.position.y; })
-        .attr('transform', 'translate(0,-40)')
-        .attr("width", 80)
-        .attr("height", 120)
-        .style({'background-color':'darkkhaki','opacity':0.3})
+        .attr("width", 60)
+        .attr("height", 60)
+        .attr('transform', 'translate(10,10)')
+        .style({'background-color':'darkkhaki','opacity':0.2})
         .on('click', function (d) {
-          console.log(d);
-          $scope.showupdatebox(d);
+          updateStatus(d);
         })
       
       svg.selectAll('div').data($scope.devs).enter().append("svg:image")
         .attr('id', function (d) { return d.id; })
-        .attr("xlink:href",  function (d) { return d.url; })
+        .attr("xlink:href",  function (d) { return updateImage(d); })
         .attr("x", function (d) { return d.position.x; })
         .attr("y", function (d) { return d.position.y; })
         .attr("width", "80")
         .attr("height", "80")
         .on('click', function (d) {
-          console.log(d);
-          $scope.showupdatebox(d);
-        })
-      
-      svg.selectAll('div').data($scope.devs).enter().append("text")
-        .attr('id', function (d) { return d.id; })
-        .text(function(d) { return d.name;}) 
-        .attr('transform', 'translate(0,-20)')
-        .attr("x", function (d) { return d.position.x; })
-        .attr("y", function (d) { return d.position.y; })
-        .attr("font-family", "Open Sans")
-        .attr("font-size", "16px")
-        .attr("fill", "black")
-        .on('click', function (d) {
-          console.log(d);
-          $scope.showupdatebox(d);
-        })
-
-      svg.selectAll('div').data($scope.devs).enter().append("text")
-        .attr('id', function (d) { return d.id; })
-        .text(function(d) {return "Status: " + d.status;})
-        .attr("x", function (d) { return d.position.x; })
-        .attr("y", function (d) { return d.position.y; })
-        .attr("font-family", "Open Sans")
-        .attr("font-size", "14px")
-        .attr("fill", "black")
-        .on('click', function (d) {
-          console.log(d);
-          $scope.showupdatebox(d);
+          updateStatus(d);
         })
     };
 
-  $scope.showupdatebox = function(dev){
-    $scope.selected = true;
-  }
+    var updateImage = function(dev){
+      switch(dev.status){
+        case 'ON':
+         return '/img/lightson.png';
+          break;
+        case 'OFF':
+         return '/img/lightsoff.png';
+          break;
+        default:
+      }
+    }
+    
+    var updateStatus= function(dev) {
+      switch(dev.status){
+        case 'ON':
+          var msg = {id:dev.id, status:'OFF'};
+          socket.emit('send:status', msg);
+          //console.log('OFF'); 
+          break;
+        case 'OFF':
+          var msg = {id:dev.id, status:'ON'};
+          socket.emit('send:status', msg);
+          //console.log('ON'); 
+          break;
+        default:
+      }
+    }
+
+
+
+ //communication
+  //from octooff
+  socket.on('receive:status', function (data) {
+      switch(data.status){
+        case 'ON':
+          $('image').attr("href", "/img/lightson.png");
+          $scope.device.status = 'ON';
+          break;
+        case 'OFF':
+          $('image').attr("href", "/img/lightsoff.png");
+          $scope.device.status = 'OFF';
+          break;
+        default:
+      }
+  });
+
+
 
 }).
 
 controller('HomePlanController', function ($scope, $http, socket) {
+  
+  $scope.devskitchen = [];
+  $scope.devsmanu = [];  
+
+  $http({method: 'GET', url: '/api/devices'})
+      .success(function(data, status, headers, config) {
+        $scope.devices = data.devices;
+        $scope.devices.forEach(function (device) {
+           //pedrada
+           if(device.room=='kitchen'){
+            $scope.devskitchen.push(device);
+           } else if (device.room=='manuroom'){
+               $scope.devsmanu.push(device);
+           }
+        });
+      })
+      .error(function(data, status, headers, config) {
+  });
+
+
+
   //mensageem que depois deixa o socket no server guardado, para envair posteriormente os dados
   socket.emit('message', { name: 'jose'});
   
@@ -331,12 +378,65 @@ controller('HomePlanController', function ($scope, $http, socket) {
     $scope.room_selected = room;
     if(room.substr(room.length - 4)=='Room'){
       $scope.selection="bedroom";
+      insertDevice(devsmanu);
     }else if(room == 'Kitchen'){
       $scope.selection="kitchen";
+      insertDevice(devskitchen);
     }
   }
-  var svg = d3.select('#floorplan');
-  var div = d3.select("body").append("div")   
-      .attr("class", "tooltip")               
-      .style("opacity", 0);
+  
+
+
+  var insertDevice = function (devs) {
+      svg.selectAll('div').data(devs).enter().append("rect")
+        .attr("x", function (d) { return d.position.x; })
+        .attr("y", function (d) { return d.position.y; })
+        .attr('transform', 'translate(0,-40)')
+        .attr("width", 80)
+        .attr("height", 120)
+        .style({'background-color':'darkkhaki','opacity':0.4})
+        .on('click', function (d) {
+          console.log(d);
+              //showupdatebox(d);
+        })
+      
+      svg.selectAll('div').data($scope.devs).enter().append("svg:image")
+        .attr('id', function (d) { return d.id; })
+        .attr("xlink:href",  function (d) { return d.url; })
+        .attr("x", function (d) { return d.position.x; })
+        .attr("y", function (d) { return d.position.y; })
+        .attr("width", "80")
+        .attr("height", "80")
+        .on('click', function (d) {
+          console.log(d);
+            //showupdatebox(d);
+        })
+      
+      svg.selectAll('div').data($scope.devs).enter().append("text")
+        .attr('id', function (d) { return d.id; })
+        .text(function(d) { return d.name;}) 
+        .attr('transform', 'translate(0,-20)')
+        .attr("x", function (d) { return d.position.x; })
+        .attr("y", function (d) { return d.position.y; })
+        .attr("font-family", "Open Sans")
+        .attr("font-size", "16px")
+        .attr("fill", "white")
+        .on('click', function (d) {
+          console.log(d);
+           //showupdatebox(d);
+        })
+
+      svg.selectAll('div').data($scope.devs).enter().append("text")
+        .attr('id', function (d) { return d.id; })
+        .text(function(d) {return "Status: " + d.status;})
+        .attr("x", function (d) { return d.position.x; })
+        .attr("y", function (d) { return d.position.y; })
+        .attr("font-family", "Open Sans")
+        .attr("font-size", "14px")
+        .attr("fill", "white")
+        .on('click', function (d) {
+          // showupdatebox(d);
+        })
+    };
+
 });

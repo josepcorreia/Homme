@@ -24,11 +24,18 @@ footer {
   background-size: auto 470px;
   height: 480px;
 }
-
-
+.fixedpanel{
+    width: 600px; 
+    margin-right: auto;
+    margin-left: auto;
+}
+.civil{
+  float: left;
+}
 #civil {
   background: url('/img/civil.png') no-repeat top center;
   height: 500px;
+
 }
 
 #legend {
@@ -85,12 +92,4 @@ footer {
 }
 #datetime{
   width: 235px; 
-}
-
-/**/
-#animate{
-  /*position absolute;*/
-  height: 50px;
-   width: 100px;
-   z-indez: 1;
 }

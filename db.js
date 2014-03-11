@@ -25,7 +25,7 @@ Device.create({ id: 1,
                 digitalport: 'D',
                 room: 'civil',
                 url:'/img/lights.png',
-                position: { x: 450, y: 90}
+                position: { x: 220, y: 10}
               },function (err, trash) {
               if (err) console.error('trash duplicated');
 });
@@ -37,7 +37,7 @@ Device.create({ id: 2,
                 digitalport: 'E',
                 room: 'manuroom',
                 url:'/img/heater.png',
-                position: { x: 500, y: 265}
+                position: { x: 300, y: 10}
               },function (err, trash) {
               if (err) console.error('trash duplicated');
 });
@@ -49,7 +49,7 @@ Device.create({ id: 3,
                 digitalport: 'E',
                 room: 'seixasroom',
                 url:'/img/tv.png',
-                position: { x: 400, y: 165}
+                position: { x: 250, y: 50}
               },function (err, trash) {
               if (err) console.error('trash duplicated');
 });
